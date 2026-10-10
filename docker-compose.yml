@@ -9,6 +9,11 @@ services:
   rewards-farmer:
     build: .
     image: rewards-farmer
+    network_mode: bridge
+    # This Codespace's Docker bridge cannot resolve through its embedded DNS.
+    # Override REWARDS_DNS_SERVER on hosts with a different upstream resolver.
+    dns:
+      - ${REWARDS_DNS_SERVER:-168.63.129.16}
     # Chromium wants more than the default 64MB of shared memory and crashes
     # partway through a page without it.
     shm_size: 1gb
@@ -53,6 +58,9 @@ services:
   signin:
     build: .
     image: rewards-farmer
+    network_mode: bridge
+    dns:
+      - ${REWARDS_DNS_SERVER:-168.63.129.16}
     shm_size: 1gb
     command: ["python", "src/signin.py"]
     environment:
